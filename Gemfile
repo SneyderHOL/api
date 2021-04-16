@@ -21,6 +21,8 @@ gem 'jsonapi-serializer'
 gem 'jsom-pagination'
 # Use jsonapi_errors_handler
 gem 'jsonapi_errors_handler'
+# Use octokit
+gem "octokit", "~> 4.0"
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
