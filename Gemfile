@@ -15,10 +15,12 @@ gem 'puma', '~> 5.0'
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-# use jsonapi-serializer
+# Use jsonapi-serializer
 gem 'jsonapi-serializer'
-# use jsom pagination
+# Use jsom-pagination
 gem 'jsom-pagination'
+# Use jsonapi_errors_handler
+gem 'jsonapi_errors_handler'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
