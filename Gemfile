@@ -17,6 +17,8 @@ gem 'puma', '~> 5.0'
 # gem 'bcrypt', '~> 3.1.7'
 # use jsonapi-serializer
 gem 'jsonapi-serializer'
+# use jsom pagination
+gem 'jsom-pagination'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
