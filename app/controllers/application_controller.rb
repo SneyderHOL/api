@@ -7,7 +7,7 @@ class ApplicationController < ActionController::API
   rescue_from ::StandardError, with: lambda { |e| handle_error(e) }
   rescue_from UserAuthenticator::AuthenticationError, with: :authetication_error
   rescue_from AuthorizationError, with: :authorization_error
-
+  
   before_action :authorize!
 
   private

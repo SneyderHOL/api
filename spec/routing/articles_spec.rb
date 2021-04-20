@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe '/articles routes' do
-  it "routes to articles#index" do
+  it "should routes to articles#index" do
     aggregate_failures do
       # expect(get '/articles').to route_to(controller: 'articles', action: 'index')
       expect(get '/articles').to route_to('articles#index')
@@ -9,7 +9,11 @@ RSpec.describe '/articles routes' do
     end
   end
 
-  it "routes to articles#show" do
+  it "should routes to articles#show" do
     expect(get '/articles/1').to route_to('articles#show', id: '1')
+  end
+
+  it 'should route to articles create' do
+    expect(post '/articles').to route_to('articles#create')
   end
 end

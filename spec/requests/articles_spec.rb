@@ -73,4 +73,66 @@ RSpec.describe ArticlesController do
       end
     end
   end
+
+  describe '#create' do
+    subject { post '/articles' }
+    context 'when no code provided' do
+      it_behaves_like 'forbidden requests'
+    end
+
+    context 'when invalid code provided' do
+      headers = { 'authorization' => 'Invalid token' }
+      it_behaves_like 'forbidden requests'
+    end
+
+    context 'when authorized' do
+      context 'when invalid parameters provided' do
+        let(:access_token) { create :access_token }
+        let(:invalid_attributes) do
+          {
+            data: {
+              attributes: {
+                title: '',
+                content: ''
+              }
+            }
+          }
+        end
+        subject {
+          post '/articles',
+          params: invalid_attributes,
+          headers: { 'authorization' => "Bearer #{access_token.token}" }
+        }
+        it 'should return 422 status code' do
+          subject
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+        
+        it 'should return proper error json' do
+          headers = { 'authorization' => "Bearer #{access_token.token}" }
+          subject
+          expect(json[:errors]).to include(
+            {
+              :status => 422,
+              :source => { :pointer => "/data/attributes/title" },
+              :title => "Invalid request",
+              :detail => ["can't be blank"]
+            },
+            {
+              :status => 422,
+              :source => { :pointer => "/data/attributes/content" },
+              :title => "Invalid request",
+              :detail => ["can't be blank"]
+            },
+            {
+              :status => 422,
+              :source => { :pointer => "/data/attributes/slug" },
+              :title => "Invalid request",
+              :detail => ["can't be blank"]
+            }
+          )
+        end
+      end
+    end
+  end
 end
