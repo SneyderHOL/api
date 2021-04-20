@@ -63,12 +63,12 @@ RSpec.describe AccessTokensController, type: :controller do
     subject { delete :destroy }
 
     context 'when no authorization header provided' do
-      it_behaves_like 'forbidden request'
+      it_behaves_like 'forbidden requests'
     end
 
     context 'when invalid authorization header provided' do
       before { request.headers['authorization'] = 'Invalid token' }
-      it_behaves_like 'forbidden request'
+      it_behaves_like 'forbidden requests'
     end
 
     context 'when valid request' do
