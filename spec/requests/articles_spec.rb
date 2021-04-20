@@ -2,13 +2,13 @@ require 'rails_helper'
 
 RSpec.describe ArticlesController do
   describe '#index' do
-    it 'returns a success response' do
+    it 'should returns a success response' do
       get '/articles'
       # expect(response.status).to eq(200)
       expect(response).to have_http_status(:ok)
     end
 
-    it 'returns a proper JSON' do
+    it 'should returns a proper JSON' do
       article = create :article
       get '/articles'
       expect(json_data.length).to eq(1)
@@ -24,7 +24,7 @@ RSpec.describe ArticlesController do
       end
     end
 
-    it 'returns articles in the proper order' do
+    it 'should returns articles in the proper order' do
       older_article = create :article, created_at: 1.hour.ago
       recent_article = create :article
       get '/articles'
@@ -34,14 +34,14 @@ RSpec.describe ArticlesController do
       )
     end
 
-    it 'paginates results' do
+    it 'should paginates results' do
       article1, article2, article3 = create_list(:article, 3)
       get '/articles', params: { page: { number: 2, size: 1} }
       expect(json_data.length).to eq(1)
       expect(json_data.first[:id]).to eq(article2.id.to_s)
     end
 
-    it 'content pagination links in the response' do
+    it 'should content pagination links in the response' do
       article1, article2, article3 = create_list(:article, 3)
       get '/articles', params: { page: { number: 2, size: 1} }
       expect(json[:links].length).to eq(5)
@@ -56,11 +56,11 @@ RSpec.describe ArticlesController do
     subject { get "/articles/#{article.id}" }
     before { subject }
 
-    it 'returns a success response' do
+    it 'should returns a success response' do
       expect(response).to have_http_status(:ok)
     end
 
-    it 'returns a proper JSON' do
+    it 'should returns a proper JSON' do
       expected = json_data
       aggregate_failures do
         expect(expected[:id]).to eq(article.id.to_s)
