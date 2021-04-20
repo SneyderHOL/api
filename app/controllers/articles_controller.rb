@@ -14,11 +14,10 @@ class ArticlesController < ApplicationController
 
   def create
     article = Article.new(article_params)
-    if article.valid?
-      #
-    else
+    article.save!
+    render json: serializer.new(article), status: :created
+  rescue
       raise Errors::Invalid.new({ errors: article.errors.to_hash })
-    end
   end
 
   def serializer
@@ -28,6 +27,8 @@ class ArticlesController < ApplicationController
   private
 
   def article_params
+    params.require(:data).require(:attributes).
+      permit(:title, :content, :slug) ||
     ActionController::Parameters.new
   end
 end
