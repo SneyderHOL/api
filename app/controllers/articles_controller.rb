@@ -17,7 +17,15 @@ class ArticlesController < ApplicationController
     article.save!
     render json: serializer.new(article), status: :created
   rescue
-      raise Errors::Invalid.new({ errors: article.errors.to_hash })
+    raise Errors::Invalid.new({ errors: article.errors.to_hash })
+  end
+
+  def update
+    article = Article.find(params[:id])
+    article.update!(article_params)
+    render json: serializer.new(article)
+  rescue
+    raise Errors::Invalid.new({ errors: article.errors.to_hash })
   end
 
   def serializer
