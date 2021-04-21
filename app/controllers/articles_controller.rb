@@ -30,6 +30,14 @@ class ArticlesController < ApplicationController
     raise Errors::Invalid.new({ errors: article.errors.to_hash })
   end
 
+  def destroy
+    article = current_user.articles.find(params[:id])
+    article.destroy
+    head :no_content
+  rescue
+    authorization_error
+  end
+
   def serializer
     ArticleSerializer
   end
