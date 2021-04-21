@@ -13,7 +13,7 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    article = Article.new(article_params)
+    article = current_user.articles.build(article_params)
     article.save!
     render json: serializer.new(article), status: :created
   rescue
@@ -21,9 +21,11 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    article = Article.find(params[:id])
+    article = current_user.articles.find(params[:id])
     article.update!(article_params)
     render json: serializer.new(article)
+  rescue ActiveRecord::RecordNotFound
+    authorization_error
   rescue
     raise Errors::Invalid.new({ errors: article.errors.to_hash })
   end
