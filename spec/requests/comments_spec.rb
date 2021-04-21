@@ -4,10 +4,46 @@ RSpec.describe "/comments", type: :request do
   let(:article) { create :article }
   
   describe "GET /index" do
+    subject { get article_comments_url(article_id: article.id), as: :json }
     it "renders a successful response" do
       # get "/articles/#{article.id}/comments", as: :json
-      get article_comments_url(article_id: article.id), as: :json
+      subject
       expect(response).to have_http_status(:ok)
+    end
+
+    it 'should return only comments belonging to article' do
+      comment = create :comment, article: article
+      create :comment
+      subject
+      expect(json_data.length).to eq(1)
+      expect(json_data.first[:id]).to eq(comment.id.to_s)
+    end
+
+    it 'should paginate results' do
+      comments = create_list :comment, 3, article: article
+      get article_comments_url(
+        article_id: article.id,
+        page: { 'size' => '1', 'number' => '2' }
+      ), as: :json
+      expect(json_data.length).to eq(1)
+      comment = comments.second
+      expect(json_data.first[:id]).to eq(comment.id.to_s)
+    end
+
+    it 'should have proper json body' do
+      comment = create :comment, article: article
+      subject
+      expect(json_data.first[:attributes]).to eq({content: comment.content})
+    end
+
+    it 'should have related objects information in the response' do
+      user = create :user
+      comment = create :comment, article: article, user: user
+      subject
+      relationship = json_data.first[:relationships]
+      expect(relationship[:article][:data][:id]).to eq(article.id.to_s)
+      expect(relationship[:user][:data][:id]).to eq(user.id.to_s)
+      
     end
   end
 

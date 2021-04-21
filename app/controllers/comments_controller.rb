@@ -1,12 +1,12 @@
 class CommentsController < ApplicationController
   skip_before_action :authorize!, only: [:index]
-  before_action :load_article, only: [:create]
+  before_action :load_article
+  include Paginable
 
   # GET /comments
   def index
-    @comments = Comment.all
-
-    render json: @comments
+    paginated = paginate(@article.comments)
+    render_collection(paginated)
   end
 
   # POST /comments
@@ -20,6 +20,10 @@ class CommentsController < ApplicationController
     else
       render json: @comment.errors, status: :unprocessable_entity
     end
+  end
+
+  def serializer
+    CommentSerializer
   end
 
   private
