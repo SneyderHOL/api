@@ -14,12 +14,10 @@ class CommentsController < ApplicationController
     @comment = @article.comments.build(
       comment_params.merge(user: current_user)
     )
-
-    if @comment.save
-      render json: @comment, status: :created, location: @article
-    else
-      render json: @comment.errors, status: :unprocessable_entity
-    end
+    @comment.save!
+    render json: serializer.new(@comment), status: :created
+  rescue
+    raise Errors::Invalid.new({ errors: @comment.errors.to_hash })
   end
 
   def serializer
@@ -34,6 +32,8 @@ class CommentsController < ApplicationController
   
   # Only allow a list of trusted parameters through.
   def comment_params
-    params.require(:comment).permit(:content)
+    params.require(:data).require(:attributes).
+      permit(:content) ||
+    ActionController::Parameters.new
   end
 end
