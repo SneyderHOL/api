@@ -63,8 +63,16 @@ RSpec.describe RegistrationsController do
 
       it 'should create a user' do
         expect(User.exists?(login: 'jsmith')).to be_falsey
-        expect{ subject }.not_to change{ User.count }.by(1)
+        expect{ subject }.to change{ User.count }.by(1)
         expect(User.exists?(login: 'jsmith')).to be_truthy
+      end
+
+      it 'should return proper json' do
+        subject
+        expect(json_data[:attributes]).to eq({
+          login: 'jsmith',
+          name: nil
+        })
       end
     end
   end
